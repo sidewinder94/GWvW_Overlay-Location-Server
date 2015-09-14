@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ServiceModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using GWvW_Overlay_Location_Server.AnetAPI;
@@ -61,7 +62,7 @@ namespace GWvW_Overlay_Location_Server
                     mates.ForAll(
                         async c =>
                         {
-                            await ((ILocationServiceCallBack)CallbackChannels[c.Id]).ReceivePositions(mates.Select(cl => cl.Position).ToList());
+                            await Task.Run(() => ((ILocationServiceCallBack)CallbackChannels[c.Id]).ReceivePositions(mates.Where(m => m != c).Select(cl => cl.Position).ToList()));
                         });
                 }
             }

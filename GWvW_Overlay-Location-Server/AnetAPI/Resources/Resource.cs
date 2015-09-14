@@ -13,7 +13,7 @@ namespace GWvW_Overlay_Location_Server.AnetAPI.Resources
     {
         private const String ApiBase = @"https://api.guildwars2.com/v2/";
         public abstract T GetResource(string apiKey);
-        protected virtual String GetJSON(string endPoint, string apiKey = null)
+        protected String GetJSON(string endPoint, string apiKey = null)
         {
             string s = null;
             using (var client = new WebClient())
