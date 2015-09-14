@@ -1,11 +1,15 @@
-﻿namespace GWvW_Overlay_Location_Server
+﻿using System;
+using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace GWvW_Overlay_Location_Server
 {
     partial class GWvWOverlayLocationServerService
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Nettoyage des ressources utilisées.
@@ -28,8 +32,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.components = new Container();
+            this.notifyIcon = new NotifyIcon(this.components);
             // 
             // notifyIcon
             // 
@@ -44,6 +48,6 @@
 
         #endregion
 
-        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private NotifyIcon notifyIcon;
     }
 }
