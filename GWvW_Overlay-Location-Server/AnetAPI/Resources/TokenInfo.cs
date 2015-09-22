@@ -2,39 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace GWvW_Overlay_Location_Server.AnetAPI.Resources
 {
-    class Account : Resource<Account>
+    class TokenInfo : Resource<TokenInfo>
     {
 
-        public const String EndPoint = "account";
+        public const String EndPoint = "tokeninfo";
 
         public String Id;
         public String Name;
-        public int World;
-        public String[] Guilds;
-        public DateTime Created;
+        public String[] Permissions;
+
 
         [JsonConstructor]
-        public Account(string id, string name, int world, string[] guilds, DateTime created)
+        public TokenInfo(string id, string name, string[] permissions)
         {
             Id = id;
             Name = name;
-            World = world;
-            Guilds = guilds;
-            Created = created;
+            Permissions = permissions;
         }
 
-        public Account()
+        public TokenInfo()
         {
 
         }
 
-        public override Account GetResource(string apiKey)
+        public override TokenInfo GetResource(string apiKey)
         {
             if (String.IsNullOrEmpty(apiKey))
             {
@@ -46,9 +44,11 @@ namespace GWvW_Overlay_Location_Server.AnetAPI.Resources
             {
                 String json;
                 var response = GetJSON(EndPoint, out json, apiKey);
+                Console.WriteLine("Response HTTP Code : {0}", response);
+                Console.WriteLine("Response : {0}", json);
                 if (response == HttpStatusCode.OK)
                 {
-                    return JsonConvert.DeserializeObject<Account>(json);
+                    return JsonConvert.DeserializeObject<TokenInfo>(json);
                 }
             }
             catch (Exception ex)

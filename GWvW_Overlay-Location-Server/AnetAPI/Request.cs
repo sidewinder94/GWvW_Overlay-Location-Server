@@ -19,11 +19,13 @@ namespace GWvW_Overlay_Location_Server.AnetAPI
                 return (T)Cache[key];
             }
 
-            var result = new T();
+            var temp = new T();
+
+            var result = temp.GetResource(apiKey);
 
             Cache[key] = result;
 
-            return result.GetResource(apiKey);
+            return result;
         }
     }
 }

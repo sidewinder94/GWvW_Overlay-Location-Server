@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A9A0E7A4-C3CD-42E0-8160-3C69674628FB}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GWvW_Overlay_Location_Server</RootNamespace>
     <AssemblyName>GWvW_Overlay-Location-Server</AssemblyName>
@@ -35,6 +35,10 @@
   <PropertyGroup>
     <StartupObject>GWvW_Overlay_Location_Server.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -55,6 +59,7 @@
     <Compile Include="AnetAPI\Request.cs" />
     <Compile Include="AnetAPI\Resources\Account.cs" />
     <Compile Include="AnetAPI\Resources\Resource.cs" />
+    <Compile Include="AnetAPI\Resources\TokenInfo.cs" />
     <Compile Include="GWvWOverlayLocationServerService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -73,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="app.manifest" />
     <None Include="packages.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

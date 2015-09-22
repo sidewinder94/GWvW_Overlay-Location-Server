@@ -6,41 +6,44 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace GWvW_Overlay_Location_Server.AnetAPI.Resources
 {
     public abstract class Resource<T>
     {
+
         private const String ApiBase = @"https://api.guildwars2.com/v2/";
         public abstract T GetResource(string apiKey);
-        protected String GetJSON(string endPoint, string apiKey = null)
+        protected HttpStatusCode GetJSON(string endPoint, out string requestResult, string apiKey = null)
         {
-            string s = null;
-            using (var client = new WebClient())
-            {
-                try
-                {
-                    client.Encoding = Encoding.UTF8;
-                    if (apiKey != null)
-                    {
-                        client.Headers = new WebHeaderCollection()
-                        {
-                            new NameValueCollection()
-                            {
-                                {"Authorization", "Bearer " + apiKey}
-                            }
-                        };
-                    }
-                    s = client.DownloadString(ApiBase + endPoint);
-                }
+            HttpStatusCode result;
+            var client = WebRequest.CreateHttp(ApiBase + endPoint);
 
-                catch (WebException)
+            if (apiKey != null)
+            {
+                client.Headers = new WebHeaderCollection()
+                    {
+                        new NameValueCollection()
+                        {
+                            {"Authorization", "Bearer " + apiKey}
+                        }
+                    };
+            }
+            using (var response = (HttpWebResponse)client.GetResponse())
+            {
+                result = response.StatusCode;
+                using (var stream = response.GetResponseStream())
                 {
-                    return null;
+                    using (var sr = new StreamReader(stream, Encoding.UTF8))
+                    {
+                        requestResult = sr.ReadToEnd();
+                    }
                 }
             }
 
-            return s;
+            return result;
         }
+
     }
 }

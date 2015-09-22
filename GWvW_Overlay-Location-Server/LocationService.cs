@@ -74,6 +74,15 @@ namespace GWvW_Overlay_Location_Server
             var channel = OperationContext.Current.GetCallbackChannel<ILocationServiceCallBack>();
             newClient.Id = Guid.NewGuid();
 
+
+            var tokenInfo = Request.GetResource<TokenInfo>(newClient.AnetAccountApiKey);
+
+            if (tokenInfo == null)
+            {
+                throw new FaultException<LocationServiceFault>(new LocationServiceFault("Invalid API Key"));
+            }
+
+
             var account = Request.GetResource<Account>(newClient.AnetAccountApiKey);
 
             if (!ServerIds.Contains(account.World))
@@ -128,10 +137,21 @@ namespace GWvW_Overlay_Location_Server
 
         public void SendPosition(Guid clientId, Position position)
         {
-            if (Clients.Contains(clientId))
+            if (Clients.Contains(clientId) && !position.Undefined())
             {
                 ((Client)Clients[clientId]).Position = position;
             }
+        }
+
+        public bool ValidateAPIKey(string apiKey)
+        {
+            Console.WriteLine("Validating API Key : {0}", apiKey);
+
+            var result = Request.GetResource<TokenInfo>(apiKey) != null;
+
+            Console.WriteLine("Valid key : {0}", result);
+
+            return result;
         }
 
         public void UnsubscribeClient(Guid clientId)
