@@ -62,7 +62,28 @@ namespace GWvW_Overlay_Location_Server
                     mates.ForAll(
                         async c =>
                         {
-                            await Task.Run(() => ((ILocationServiceCallBack)CallbackChannels[c.Id]).ReceivePositions(mates.Where(m => m != c).Select(cl => cl.Position).ToList()));
+                            await Task.Run(() =>
+                            {
+                                try
+                                {
+                                    if (!CallbackChannels.Contains(c.Id))
+                                    {
+                                        return;
+                                    }
+
+                                    ((ILocationServiceCallBack)CallbackChannels[c.Id]).ReceivePositions(
+                                    mates.Where(m => m != c).Select(cl => cl.Position).ToList());
+                                }
+                                catch (Exception)
+                                {
+
+                                    CallbackChannels.Remove(c.Id);
+                                }
+
+
+
+
+                            });
                         });
                 }
             }
@@ -108,7 +129,7 @@ namespace GWvW_Overlay_Location_Server
                 {
                     CallbackChannels.Add(existing.Id, channel);
                 }
-
+                Console.WriteLine("Client {0} reconnected", newClient);
                 return existing.Id;
             }
 
@@ -131,7 +152,7 @@ namespace GWvW_Overlay_Location_Server
             }
 
 
-
+            Console.WriteLine("Client {0} Subscribed", newClient);
             return newClient.Id;
         }
 
@@ -141,6 +162,12 @@ namespace GWvW_Overlay_Location_Server
             {
                 ((Client)Clients[clientId]).Position = position;
             }
+
+            if (!CallbackChannels.Contains(clientId) && Clients.Contains(clientId))
+            {
+                CallbackChannels.Add(clientId, OperationContext.Current.GetCallbackChannel<ILocationServiceCallBack>());
+            }
+
         }
 
         public bool ValidateAPIKey(string apiKey)
